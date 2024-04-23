@@ -1,0 +1,7 @@
+# Archivos IDE
+.project
+.settings
+
+# Directorios generados
+build
+target
