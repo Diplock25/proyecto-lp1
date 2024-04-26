@@ -16,10 +16,10 @@ public class Inventario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "inventario_id")
-	private Long inventorioId;
+	private Long inventarioId;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "producto_id", nullable = false)
+	@JoinColumn(name = "producto_id", referencedColumnName = "producto_id", nullable = false)
 	private Producto producto;
 
 	@Column(name = "cantidad", nullable = false)

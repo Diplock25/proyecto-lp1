@@ -1,7 +1,6 @@
 package com.laptopstore.tests;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -16,49 +15,50 @@ public class Test {
 	static SessionFactory sessionFactory;
 	static Session session;
 
-	private static void insertProduct() {
+	private static void insert() {
 
-		Supplier supplier = new Supplier();
-		supplier.setCompanyName("comapany1");
-		supplier.setAddress("address");
-		supplier.setContactNumbers("contactNumbers");
-		supplier.setContactPerson("contactPerson");
+		Categoria cat = new Categoria();
+		cat.setNombreCategoria("Hogar");
 
-		Category category = new Category();
-		category.setCategoryName("categoria-1");
+		Cliente cli = new Cliente();
+		cli.setNombres("Juan Pérez");
+		cli.setApellidos("Gómez");
+		cli.setCorreo("juan.perez@email.com");
+		cli.setDireccion("Calle Mayor 123");
+		cli.setTelefono("+51 987654321");
 
-		List<Size> availableSizes = new ArrayList<>();
-		availableSizes.add(s1);
-		availableSizes.add(s2);
+		Orden orden = new Orden();
+		orden.setFechaOrden(LocalDateTime.now());
+		orden.setCliente(cli);
+		orden.setEstado("Pagado");
 
-		List<Color> availableColors = new ArrayList<>();
-		availableColors.add(c1);
-		availableColors.add(c2);
+		Producto producto = new Producto();
+		producto.setCodigoProducto("P123");
+		producto.setCategoria(cat);
+		producto.setNombreProducto("Silla de escritorio");
+		producto.setDescripcionProducto("Silla ergonómica para oficina en color negro.");
+		producto.setPrecio(59.99);
+		producto.setOferta(10.0);
 
-		Inventory inventory = new Inventory();
+		DetalleOrden detalleOrden = new DetalleOrden();
+		detalleOrden.setCantidad(2);
+		detalleOrden.setOrden(orden);
+		detalleOrden.setProducto(producto);
 
-		Product p1 = new Product();
-		p1.setName("p1");
-		p1.setSupplier(supplier);
-		p1.setCategory(category);
-		p1.setProductCode("code-pro1");
-		p1.setPrice(new BigDecimal(1.0));
-		p1.setAvailableColors(availableColors);
-		p1.setAvailableSizes(availableSizes);
-		p1.setInventory(inventory);
+		Inventario inventario = new Inventario();
+		inventario.setCantidad(10);
+		inventario.setProducto(producto);
 
 		session.beginTransaction();
-		// sizes
-		session.persist(s1);
-		session.persist(s2);
 
-		// colors
-		session.persist(c1);
-		session.persist(c2);
+		session.persist(cat);
+		session.persist(producto);
 
-		session.persist(category);
+		session.persist(cli);
 
-		session.persist(p1);
+		session.persist(orden);
+
+		session.persist(inventario);
 		session.getTransaction().commit();
 
 		mostrarTodos();
@@ -67,7 +67,7 @@ public class Test {
 
 	@SuppressWarnings("unchecked")
 	private static void mostrarTodos() {
-		List<Product> products = (List<Product>) session.createQuery("FROM Product").getResultList();
+		List<Orden> products = (List<Orden>) session.createQuery("FROM Orden").getResultList();
 		products.forEach(System.out::println);
 
 	}
@@ -79,7 +79,8 @@ public class Test {
 			sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
 			session = sessionFactory.openSession();
 
-			getProductById(1L);
+			// insert();
+			System.out.println("Se pudo");
 			close();
 
 		} catch (Exception e) {
@@ -91,9 +92,10 @@ public class Test {
 
 		session.beginTransaction();
 
-		Product product = session.get(Product.class, id);
-		List<Color> colors = product.getAvailableColors();
-		colors.forEach(System.out::println);
+		Producto product = session.get(Producto.class, id);
+		System.out.println(product);
+		// List<> colors = product.getAvailableColors();
+		// colors.forEach(System.out::println);
 
 		session.getTransaction().commit();
 	}

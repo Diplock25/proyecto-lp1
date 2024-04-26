@@ -17,11 +17,11 @@ public class DetalleOrden {
 	private Long detalleOrdenId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orden_id", nullable = false)
+	@JoinColumn(name = "orden_id", referencedColumnName = "orden_id", nullable = false)
 	private Orden orden;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "producto_id", nullable = false)
+	@JoinColumn(name = "producto_id", referencedColumnName = "producto_id", nullable = false)
 	private Producto producto;
 
 	@Column(name = "cantidad", nullable = false)
